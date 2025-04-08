@@ -92,7 +92,7 @@ func (level Level) move(dir Direction) (*Level, error) {
 
 	// NOTE: Because the player cannot reach the edges of the level, we don't
 	// have to worry about bounds checking the tiles array
-	for next_tile := tiles[player+offset]; !next_tile.is_solid(); {
+	for next_tile := tiles[player+offset]; !next_tile.is_solid(); next_tile = tiles[player+offset] {
 		player = player + offset
 	}
 
@@ -110,7 +110,7 @@ func (level Level) to_string() string {
 	for slice_end < len(level.tiles) {
 		next_slice := level.tiles[slice_start:slice_end]
 		for i, t := range next_slice {
-			if slice_start+i+1 == level.player_index {
+			if slice_start+i == level.player_index {
 				builder.WriteByte(dir_to_byte[level.previous_direction])
 			} else {
 				builder.WriteByte(tile_to_byte[t])
@@ -144,7 +144,7 @@ func load_level(path string) (*Level, error) {
 		for _, b := range bytes {
 			level.tiles = append(level.tiles, byte_to_tile[b])
 			if b == 'S' {
-				level.player_index = len(level.tiles)
+				level.player_index = len(level.tiles) - 1
 			}
 		}
 	}
@@ -168,10 +168,17 @@ func main() {
 	}
 	fmt.Println(level.to_string())
 
-	// level, err = level.move(Dir_Up)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-	// fmt.Println(level.to_string())
+	level, err = level.move(Dir_Up)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(level.to_string())
+
+	level, err = level.move(Dir_Left)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(level.to_string())
 }
