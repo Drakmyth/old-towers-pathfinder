@@ -1,0 +1,14 @@
+# golang-zmachine
+stories/
+
+# Go
+*.exe
+*.log
+.env
+golang-zmachine
+./zmachine
+
+# VSCode
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
