@@ -25,9 +25,14 @@ func load_level(path string) (*Level, error) {
 	}
 	defer file.Close()
 
+	level := Level{}
+
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		fmt.Println(scanner.Text())
+		bytes := scanner.Bytes()
+		for _, b := range bytes {
+			level = append(level, byte_to_tile(b))
+		}
 	}
 
 	if err = scanner.Err(); err != nil {
@@ -35,6 +40,19 @@ func load_level(path string) (*Level, error) {
 	}
 
 	return &Level{}, nil
+}
+
+func byte_to_tile(b byte) Tile {
+	switch b {
+	case 'X':
+		return Tile_Wall
+	case 'B':
+		return Tile_Brick
+	case '1':
+		return Tile_OneWay
+	default:
+		return Tile_Empty
+	}
 }
 
 func main() {
