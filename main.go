@@ -29,9 +29,9 @@ const (
 	Dir_Right
 )
 
+// NOTE: For now we'll hardcode to a level width of 18 tiles
 const LEVEL_WIDTH = 18
 
-// NOTE: For now we'll hardcode to a level width of 18 tiles
 var offsets = map[Direction]int{
 	Dir_Up:    -LEVEL_WIDTH,
 	Dir_Down:  LEVEL_WIDTH,
@@ -93,6 +93,9 @@ func (level Level) move(dir Direction) (*Level, error) {
 	// NOTE: Because the player cannot reach the edges of the level, we don't
 	// have to worry about bounds checking the tiles array
 	for next_tile := tiles[player+offset]; !next_tile.is_solid(); next_tile = tiles[player+offset] {
+		if tiles[player] == Tile_OneWay {
+			tiles[player] = Tile_Wall
+		}
 		player = player + offset
 	}
 
@@ -168,14 +171,9 @@ func main() {
 	}
 	fmt.Println(level.to_string())
 
+	level, _ = level.move(Dir_Up)
+	level, _ = level.move(Dir_Left)
 	level, err = level.move(Dir_Up)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(level.to_string())
-
-	level, err = level.move(Dir_Left)
 	if err != nil {
 		fmt.Println(err)
 		return
