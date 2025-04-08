@@ -39,7 +39,7 @@ func load_level(path string) (*Level, error) {
 		return nil, err
 	}
 
-	return &Level{}, nil
+	return &level, nil
 }
 
 func byte_to_tile(b byte) Tile {
